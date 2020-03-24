@@ -6,6 +6,7 @@ jobs:
             - checkout
             - run: |
                 docker build -t nginx-test:$CIRCLE_SHA1 .
+                touch ~/.aws/credentials
                 echo "[default]
                 aws_access_key_id = $aws_access_key_id
                 aws_secret_access_key = $aws_secret_access_key
