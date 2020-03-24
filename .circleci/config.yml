@@ -1,0 +1,16 @@
+version: 2
+jobs:
+    dockerbuild:
+        machine: true
+        steps:
+            - run: |
+                docker build circleci-nginx-test:$CIRCLE_SHA1 .
+
+workflows:
+    version: 2
+    build-workflow:
+        jobs:
+            - dockerbuild:
+                filters:
+                    branches:
+                        only: master
