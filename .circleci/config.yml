@@ -6,7 +6,8 @@ jobs:
             - checkout
             - run: |
                 docker build -t nginx-test:$CIRCLE_SHA1 .
-                docker images
+                aws --version
+    
                 
 
 workflows:
