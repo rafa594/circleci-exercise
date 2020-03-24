@@ -3,9 +3,10 @@ jobs:
     dockerbuild:
         machine: true
         steps:
+            - checkout
             - run: |
-                ls
-                pwd
+                ls -l ../
+                
 
 workflows:
     version: 2
