@@ -4,7 +4,7 @@ jobs:
         machine: true
         steps:
             - run: |
-                docker build circleci-nginx-test:$CIRCLE_SHA1 .
+                docker build  .
 
 workflows:
     version: 2
