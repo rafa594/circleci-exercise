@@ -6,6 +6,7 @@ jobs:
             - checkout
             - run: |
                 docker build nginx-test:$CIRCLE_SHA1 .
+                docker images
                 
 
 workflows:
