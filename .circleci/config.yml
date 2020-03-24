@@ -5,8 +5,7 @@ jobs:
         steps:
             - checkout
             - run: |
-                ls -l
-                ls -l ../
+                docker build nginx-test:$CIRCLE_SHA1 .
                 
 
 workflows:
