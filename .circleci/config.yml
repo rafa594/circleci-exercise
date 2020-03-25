@@ -41,10 +41,19 @@ jobs:
 
                 
                 aws ecs update-service --force-new-deployment --service rafa-service --task-definition CircleCITaskDefinition --cluster rafa-ecsECSCluster > newinfo.json
-                cat newinfo.json
-                aws ecs describe-services --services rafa-service --cluster rafa-ecsECSCluster > ninfo.json
-                echo "------------------------"
-                cat ninfo.json
+                
+                
+                for i in $( aws ecs list-tasks --cluster rafa-ecsECSCluster --desired-status 'RUNNING' --output text --query 'taskARNS[*]' ) ; do 
+                    aws ecs stop-task --cluster rafa-ecsECSCluster --task $i --reason "Stopped by kill script"  
+                done
+
+                for i in {0..9}; do 
+                    aws ecs describe-services --services rafa-service --cluster rafa-ecsECSCluster > service.json
+                    python check.py
+                done
+
+                
+
 
 
 
