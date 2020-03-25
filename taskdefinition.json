@@ -1,7 +1,6 @@
 {
   "containerDefinitions": [
     {
-      "family": "rafa-service",
       "name": "rafa-service",
       "image": "IMAGENAME",
       "memory": 300,
@@ -22,12 +21,9 @@
       }
     }
   ],
-  "requiresCompatibilities": [
-    "EC2"
-  ],
   "tags": [
     {
-      "key": "Name",
+      "key": "family",
       "value": "CircleCITaskDefinition"
     }
   ]
