@@ -12,6 +12,7 @@ jobs:
                 aws_secret_access_key = $aws_secret_access_key
                 aws_session_token = $aws_session_token
                 " > ~/.aws/credentials
+                aws --version
                 aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $aws_ecr_image
                 docker tag rafa-nginx-image:$CIRCLE_SHA1 $aws_ecr_image:$CIRCLE_SHA1
                 docker push $aws_ecr_image:$CIRCLE_SHA1
