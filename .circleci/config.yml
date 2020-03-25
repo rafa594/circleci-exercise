@@ -38,7 +38,7 @@ jobs:
 
                 
                 aws ecs update-service --service rafa-service --task-definition CircleCITaskDefinition --cluster rafa-ecsECSCluster
-                aws ecs describe-services --services rafa-service
+                aws ecs describe-services --services rafa-service --cluster rafa-ecsECSCluster
 
 
 
