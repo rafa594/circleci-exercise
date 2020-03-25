@@ -34,10 +34,10 @@ jobs:
 
                 sed 's#IMAGENAME#'"$aws_ecr_image:$CIRCLE_SHA1"'#' ./taskdefinition.json > td.json
                 
-                aws ecs register-task-definition --cli-input-json file://$HOME/project/td.json
+                aws ecs register-task-definition --cli-input-json file://$HOME/project/td.json > info.json
 
                 
-                aws ecs update-service --service rafa-service --task-definition CircleCITaskDefinition --cluster rafa-ecsECSCluster
+                aws ecs update-service --service rafa-service --task-definition CircleCITaskDefinition --cluster rafa-ecsECSCluster --force-new-deployment
                 aws ecs describe-services --services rafa-service --cluster rafa-ecsECSCluster
 
 
