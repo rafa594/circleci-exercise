@@ -25,6 +25,7 @@ jobs:
         steps:
             - checkout
             - run: |
+                pwd
                 mkdir -p ~/.aws
                 echo "[default]
                 aws_access_key_id = $aws_access_key_id
