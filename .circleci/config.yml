@@ -42,7 +42,7 @@ jobs:
                 
                 aws ecs update-service --force-new-deployment --service rafa-service --task-definition CircleCITaskDefinition --cluster rafa-ecsECSCluster > newinfo.json
                 
-                aws ecs list-tasks --cluster rafa-ecsECSCluster  --output text --query 'taskARNS[*]' > tasks.json
+                aws ecs list-tasks --cluster rafa-ecsECSCluster --desired-status 'RUNNING' --output text --query 'taskARNS[0]' > tasks.json
                 cat tasks.json
                 
                 for i in $( aws ecs list-tasks --cluster rafa-ecsECSCluster --desired-status 'RUNNING' --output text --query 'taskARNS[*]' ) ; do 
