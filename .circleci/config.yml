@@ -25,13 +25,13 @@ jobs:
         steps:
             - checkout
             - run: |
-                pwd
                 mkdir -p ~/.aws
                 echo "[default]
                 aws_access_key_id = $aws_access_key_id
                 aws_secret_access_key = $aws_secret_access_key
                 aws_session_token = $aws_session_token
                 " > ~/.aws/credentials
+
                 sed 's#IMAGENAME#'"$aws_ecr_image:$CIRCLE_SHA1"'#' ./taskdefinition.json > td.json
                 aws ecs register-task-definition --cli-input-json file://$HOME/project/td.json > info.json
                 arn_taskdefinition=$(cat info.json | python -c 'import sys, json; print json.load(sys.stdin)["ContainerDefinition"]["Name"]')
