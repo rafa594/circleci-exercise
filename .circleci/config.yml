@@ -21,8 +21,8 @@ jobs:
         docker:
             - image: circleci/python:3.6.4
         steps:
-            -checkout
-            -run: |
+            - checkout
+            - run: |
                 mkdir -p ~/.aws
                 echo "[default]
                 aws_access_key_id = $aws_access_key_id
