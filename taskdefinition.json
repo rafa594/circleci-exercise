@@ -1,0 +1,33 @@
+{
+  "ContainerDefinitions": [
+    {
+      "Name": "rafa-service",
+      "Image": "IMAGENAME",
+      "Memory": 300,
+      "Essential": true,
+      "PortMappings": [
+        {
+          "ContainerPort": 80,
+          "HostPort": 80
+        }
+      ],
+      "LogConfiguration": {
+        "LogDriver": "awslogs",
+        "Options": {
+          "awslogs-group": "rafa-ecs-service-rafa-service",
+          "awslogs-region": "us-west-2",
+          "awslogs-stream-prefix": "rafa-service"
+        }
+      }
+    }
+  ],
+  "RequiresCompatibilities": [
+    "EC2"
+  ],
+  "Tags": [
+    {
+      "Key": "Name",
+      "Value": "CircleCITaskDefinition"
+    }
+  ]
+}

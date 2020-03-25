@@ -5,15 +5,40 @@ jobs:
         steps:
             - checkout
             - run: |
-                docker build -t nginx-test:$CIRCLE_SHA1 .
+                docker build -t rafa-nginx-image:$CIRCLE_SHA1 .
                 mkdir -p ~/.aws
                 echo "[default]
                 aws_access_key_id = $aws_access_key_id
                 aws_secret_access_key = $aws_secret_access_key
                 aws_session_token = $aws_session_token
                 " > ~/.aws/credentials
-                aws s3 ls
+                aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $aws_ecr_image
+                docker tag rafa-nginx-image:$CIRCLE_SHA1 $aws_ecr_image:$CIRCLE_SHA1
+                docker push $aws_ecr_image:$CIRCLE_SHA1
+
+
+    taskdefinitionUpdate:
+        docker:
+            - image: circleci/python:3.6.4
+        steps:
+            -checkout
+            -run: |
+                mkdir -p ~/.aws
+                echo "[default]
+                aws_access_key_id = $aws_access_key_id
+                aws_secret_access_key = $aws_secret_access_key
+                aws_session_token = $aws_session_token
+                " > ~/.aws/credentials
+                sed 's/IMAGENAME/$aws_ecr_image:$CIRCLE_SHA1' ./taskdefinition.json
+                aws ecs register-task-definition --cli-input-json file://$HOME/taskdefinition.json > info.json
+                arn_taskdefinition=$(cat info.json | python -c 'import sys, json; print json.load(sys.stdin)["ContainerDefinition"]["Name"]')
+                aws ecs update-service --service rafa-service --task-definition $arn_taskdefinition
+
+
+
+                
     
+            
                 
 
 workflows:
@@ -26,3 +51,10 @@ workflows:
                         only: master
                 context: aws_credentials
                 
+            - taskdefinitionUpdate:
+                filters:
+                    branches:
+                        only: master
+                context: aws_credentials
+                requires:
+                    - dockerbuild
