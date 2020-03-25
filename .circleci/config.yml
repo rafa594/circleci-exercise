@@ -40,8 +40,11 @@ jobs:
                 aws ecs register-task-definition --cli-input-json file://$HOME/project/td.json > info.json
 
                 
-                aws ecs update-service --force-new-deployment --service rafa-service --task-definition CircleCITaskDefinition --cluster rafa-ecsECSCluster 
-                aws ecs describe-services --services rafa-service --cluster rafa-ecsECSCluster
+                aws ecs update-service --force-new-deployment --service rafa-service --task-definition CircleCITaskDefinition --cluster rafa-ecsECSCluster > newinfo.json
+                cat newinfo.json
+                aws ecs describe-services --services rafa-service --cluster rafa-ecsECSCluster > ninfo.json
+                echo "------------------------"
+                cat ninfo.json
 
 
 
