@@ -36,6 +36,7 @@ jobs:
                 echo "sed ok"
                 aws ecs register-task-definition --cli-input-json file://$HOME/project/td.json > info.json
                 echo "register ok"
+                cat info.json
                 arn_taskdefinition=$(cat info.json | python -c 'import sys, json; print json.load(sys.stdin)["ContainerDefinition"]["Name"]')
                 echo $arn_taskdefinition
                 aws ecs update-service --service rafa-service --task-definition $arn_taskdefinition
