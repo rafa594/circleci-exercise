@@ -25,6 +25,9 @@ jobs:
         steps:
             - checkout
             - run: |
+                curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                unzip awscliv2.zip
+                sudo ./aws/install
                 mkdir -p ~/.aws
                 echo "[default]
                 aws_access_key_id = $aws_access_key_id
