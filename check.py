@@ -8,7 +8,7 @@ for i in range(10):
         flag = True
         break
     else:
-        time.sleep(2)
+        time.sleep(60)
 if not flag:
     os.system("cat failure.json")
 
