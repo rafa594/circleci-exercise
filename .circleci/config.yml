@@ -20,12 +20,12 @@ jobs:
         steps:
             - checkout
             - run: |
-                docker build -t NEWIMAGE:$CIRCLE_SHA1 .                
+                docker build -t newimage:$CIRCLE_SHA1 .                
                 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
                 unzip awscliv2.zip
                 sudo ./aws/install
                 aws ecr get-login-password  | docker login --username AWS --password-stdin $AWS_ECR_IMAGE
-                docker tag NEWIMAGE:$CIRCLE_SHA1 $AWS_ECR_IMAGE:$CIRCLE_SHA1
+                docker tag newimage:$CIRCLE_SHA1 $AWS_ECR_IMAGE:$CIRCLE_SHA1
                 docker push $AWS_ECR_IMAGE:$CIRCLE_SHA1
 
 
