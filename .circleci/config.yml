@@ -18,10 +18,7 @@ jobs:
         docker:
             - image: circleci/python:3.6.4
         steps:
-            - checkout
-            - run:
-                name: Install Docker client
-                command: apk add docker-cli
+            - checkout            
             - run: |
                 sudo apt-get update -y
                 sudo apt-get install docker-ce docker-ce-cli containerd.io
