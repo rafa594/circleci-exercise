@@ -15,8 +15,7 @@
 version: 2
 jobs:
     dockerbuild:
-        docker:
-            - image: circleci/python:3.6.4
+        machine: true
         steps:
             - checkout            
             - run: |
