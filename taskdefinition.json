@@ -1,7 +1,7 @@
 {
   "containerDefinitions": [
     {
-      "name": "rafa-service",
+      "name": "SERVICENAME",
       "image": "IMAGENAME",
       "memory": 300,
       "essential": true,
@@ -14,12 +14,12 @@
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
-          "awslogs-group": "rafa-ecs-service-rafa-service",
-          "awslogs-region": "us-west-2",
-          "awslogs-stream-prefix": "rafa-service"
+          "awslogs-group": "LOGGROUP",
+          "awslogs-region": "REGIONNAME",
+          "awslogs-stream-prefix": "SERVICENAME"
         }
       }
     }
   ],
-  "family": "CircleCITaskDefinition"
+  "family": "TASKDEFINITIONNAME"
 }
