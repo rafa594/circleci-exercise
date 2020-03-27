@@ -19,8 +19,9 @@ jobs:
             - image: circleci/python:3.6.4
         steps:
             - checkout
-            - setup_remote_docker:
-                docker_layer_caching: true
+            - run:
+                name: Install Docker client
+                command: apk add docker-cli
             - run: |
                 docker build -t newimage:$CIRCLE_SHA1 .                
                 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
