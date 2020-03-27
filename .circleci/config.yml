@@ -3,7 +3,7 @@
 # Also, a context must be created to store the Environment variables used in the file.
 # Environment variables that must be setted are:
 #   1. AWS_ACCESS_KEY_ID
-#   2. AWS_SECRET_ACCESS_KEY_ID
+#   2. AWS_SECRET_ACCESS_KEY
 #   3. AWS_SESSION_TOKEN
 #   4. AWS_DEFAULT_REGION
 #   5. AWS_ECR_IMAGE
