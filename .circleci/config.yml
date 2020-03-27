@@ -15,7 +15,8 @@
 version: 2
 jobs:
     dockerbuild:
-        machine: true
+        docker:
+            - image: circleci/python:3.6.4
         steps:
             - checkout
             - run: |
@@ -29,7 +30,8 @@ jobs:
 
 
     taskdefinitionUpdate:
-        machine: true
+        docker:
+            - image: circleci/python:3.6.4
         steps:
             - checkout
             - run: |
