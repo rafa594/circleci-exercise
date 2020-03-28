@@ -12,7 +12,7 @@ for i in range(10):
     else:
         time.sleep(60)
 if not flag:
-    os.system("cat failure.json")
+    os.system("exit 1")
 
 
 
