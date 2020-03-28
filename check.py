@@ -1,6 +1,6 @@
-import json, os, time
+import json, os, time, sys
 flag = False
-time.sleep(30)
+time.sleep(3)
 for i in range(10):
     os.system("aws ecs describe-services --services "+ os.environ.get('SERVICE_NAME') + " --cluster "+ os.environ.get('CLUSTER_NAME') + " > service.json")
     text = open("service.json", "r").read()
@@ -10,9 +10,10 @@ for i in range(10):
         flag = True
         break
     else:
-        time.sleep(60)
+        time.sleep(6)
+print (flag)
 if not flag:
-    os.system("exit 1")
+    sys.exit(1)
 
 
 
