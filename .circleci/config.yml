@@ -18,20 +18,34 @@ jobs:
         machine: true
         steps:
             - checkout            
-            - run: |
-                sudo apt-get update -y
-                curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
-                sudo add-apt-repository \
-                "deb [arch=amd64] https://download.docker.com/linux/debian \
-                $(lsb_release -cs) \
-                stable"
-                docker build -t newimage:$CIRCLE_SHA1 .                
-                curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                unzip awscliv2.zip
-                sudo ./aws/install
-                aws ecr get-login-password  | docker login --username AWS --password-stdin $AWS_ECR_IMAGE
-                docker tag newimage:$CIRCLE_SHA1 $AWS_ECR_IMAGE:$CIRCLE_SHA1
-                docker push $AWS_ECR_IMAGE:$CIRCLE_SHA1
+            - run: 
+                name: update system
+                command: sudo apt-get update -y
+                
+            - run:
+                name: install docker
+                command: |                
+                    curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -
+                    sudo add-apt-repository \
+                    "deb [arch=amd64] https://download.docker.com/linux/debian \
+                    $(lsb_release -cs) \
+                    stable"
+            - run:
+                name: build image
+                command: docker build -t newimage:$CIRCLE_SHA1 .
+
+            - run:
+                name: install awscli v2.0
+                command: |
+                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                    unzip awscliv2.zip
+                    sudo ./aws/install
+            - run:
+                name: push image to ECR
+                command: |
+                    aws ecr get-login-password  | docker login --username AWS --password-stdin $AWS_ECR_IMAGE
+                    docker tag newimage:$CIRCLE_SHA1 $AWS_ECR_IMAGE:$CIRCLE_SHA1
+                    docker push $AWS_ECR_IMAGE:$CIRCLE_SHA1
 
 
     taskdefinitionUpdate:
@@ -39,20 +53,32 @@ jobs:
             - image: circleci/python:3.6.4
         steps:
             - checkout
-            - run: |
-                curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                unzip awscliv2.zip
-                sudo ./aws/install                
-                sed -e '
-                s#IMAGENAME#'"$AWS_ECR_IMAGE:$CIRCLE_SHA1"'#
-                s#SERVICENAME#'"$SERVICE_NAME"'#
-                s#LOGGROUP#'"$AWS_LOG_GROUP"'#
-                s#REGIONNAME#'"$AWS_DEFAULT_REGION"'#
-                s#TASKDEFINITIONNAME#'"$TASKDEFINITION_NAME"'#                
-                ' ./taskdefinition.json > td.json                
-                aws ecs register-task-definition --cli-input-json file://$HOME/project/td.json > info.json                
-                aws ecs update-service --force-new-deployment --service $SERVICE_NAME --task-definition $TASKDEFINITION_NAME --cluster $CLUSTER_NAME > newinfo.json                
-                python check.py
+            - run:
+                name: install awscli v2.0 
+                command: |
+                    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                    unzip awscliv2.zip
+                    sudo ./aws/install                
+            - run:
+                name: update taskdefinition template
+                command: |
+                    sed -e '
+                    s#IMAGENAME#'"$AWS_ECR_IMAGE:$CIRCLE_SHA1"'#
+                    s#SERVICENAME#'"$SERVICE_NAME"'#
+                    s#LOGGROUP#'"$AWS_LOG_GROUP"'#
+                    s#REGIONNAME#'"$AWS_DEFAULT_REGION"'#
+                    s#TASKDEFINITIONNAME#'"$TASKDEFINITION_NAME"'#                
+                    ' ./taskdefinition.json > td.json                
+            - run:
+                name: register taskdefinition
+                command: aws ecs register-task-definition --cli-input-json file://$HOME/project/td.json > info.json                
+            
+            - run:
+                name: update service
+                command: aws ecs update-service --force-new-deployment --service $SERVICE_NAME --task-definition $TASKDEFINITION_NAME --cluster $CLUSTER_NAME > newinfo.json                
+            - run:
+                name: check steady status
+                command: python check.py
 
 workflows:    
     version: 2
